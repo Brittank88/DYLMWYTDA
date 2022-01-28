@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 requests = "*"
 tqdm = "*"
+loguru = "*"
+colorama = "*"
 
 [dev-packages]
 
