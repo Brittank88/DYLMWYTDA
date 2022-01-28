@@ -19,8 +19,8 @@ from os import cpu_count
 from threading import get_native_id
 from colorama import Fore, Back, Style
 
-BLOCK_SIZE = 1024   # 1 Kibibyte = 1024 bytes
-DOMAIN     = 'https://gdcolon.com'
+BLOCK_SIZE           = 1024   # 1 Kibibyte = 1024 bytes
+DOMAIN               = 'https://gdcolon.com'
 BLOCKING_COEFFICIENT = 0.5
 
 def init_argparse() -> ArgumentParser:
