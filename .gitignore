@@ -1,2 +1,3 @@
-out/
-exe/
+output/
+sfx/
+__pycache__/
