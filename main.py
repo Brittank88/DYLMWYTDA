@@ -20,7 +20,7 @@ from threading import get_native_id
 from colorama import Fore, Back, Style
 
 BLOCK_SIZE           = 1024   # 1 Kibibyte = 1024 bytes
-DOMAIN               = 'https://gdcolon.com'
+DOMAIN               = 'https://gdcolon.com/🗿'
 BLOCKING_COEFFICIENT = 0.5
 
 def init_argparse() -> ArgumentParser:
@@ -28,18 +28,12 @@ def init_argparse() -> ArgumentParser:
 
     parser = ArgumentParser(
         usage       = '%(prog)s [OPTION]',
-        description = f'Downloads all SFX from {DOMAIN}/🗿.'
+        description = f'Downloads all SFX from {DOMAIN}.'
     )
     parser.add_argument(
         '-o', '--output'                 ,
         help    = 'The output directory for downloaded SFX.',
         default = './sfx'                                   ,
-        type    = str
-    )
-    parser.add_argument(
-        '-s', '--soundlist'                                    ,
-        help    = 'The JSON soundlist url (excluding domain!).',
-        default = '/server/soundlist'                          ,
         type    = str
     )
     parser.add_argument(
@@ -63,22 +57,21 @@ def main() -> None:
         """Underlying function that ownloads a sound from the server."""
 
         try:
-            filename     = sound.get('filename')
-            filename_ext = filename.split('/')[-1]
+            filename = sound.get('id') + '.wav'
 
             logger_prefix = f'{Fore.BLACK}{Back.WHITE}[Thread | {"%05d" % get_native_id()}]{Style.RESET_ALL}'
-            tqdm.write(f'{logger_prefix}{Fore.LIGHTBLUE_EX}{Style.DIM} Downloading \'{filename_ext}\'...{Style.RESET_ALL}')
+            tqdm.write(f'{logger_prefix}{Fore.LIGHTBLUE_EX}{Style.DIM} Downloading \'{filename}\'...{Style.RESET_ALL}')
 
-            with Path(args.output, filename_ext) as filepath:
+            with Path(args.output, filename) as filepath:
                 filepath.parents[0].mkdir(parents = True, exist_ok = True)
-                filepath.open('wb').write(get(f'{DOMAIN}/{filename}').content)
+                filepath.open('wb').write(get(f'{DOMAIN}/sounds/{filename}').content)
 
-            tqdm.write(f'{logger_prefix}{Fore.LIGHTGREEN_EX}{Style.BRIGHT} Downloaded \'{filename_ext}\'!{Style.RESET_ALL}')
+            tqdm.write(f'{logger_prefix}{Fore.LIGHTGREEN_EX}{Style.BRIGHT} Downloaded \'{filename}\'!{Style.RESET_ALL}')
 
         except Exception as _:
-            tqdm.write(f'{logger_prefix}{Fore.LIGHTYELLOW_EX} Download failed for \'{filename_ext}\'!{Style.RESET_ALL}')
+            tqdm.write(f'{logger_prefix}{Fore.LIGHTYELLOW_EX} Download failed for \'{filename}\'!{Style.RESET_ALL}')
 
-    thread_map(_download, loads(get(f'{DOMAIN}{args.soundlist}').text), max_workers = args.threads)
+    thread_map(_download, loads(get(f'{DOMAIN}/sounds.json').text), max_workers = args.threads)
 
 if __name__ == '__main__':
     main()
