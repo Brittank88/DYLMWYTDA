@@ -20,7 +20,7 @@ from threading import get_native_id
 from colorama import Fore, Back, Style
 
 BLOCK_SIZE           = 1024   # 1 Kibibyte = 1024 bytes
-DOMAIN               = 'https://gdcolon.com/🗿'
+DOMAIN               = 'https://thirtydollar.website/'
 BLOCKING_COEFFICIENT = 0.5
 
 def init_argparse() -> ArgumentParser:
@@ -37,9 +37,9 @@ def init_argparse() -> ArgumentParser:
         type    = str
     )
     parser.add_argument(
-        '-t', '--threads'                                  ,
-        help    = 'The number of threads to use.'          ,
-        default = cpu_count() // (1 - BLOCKING_COEFFICIENT),
+        '-t', '--threads'                                                                         ,
+        help    = 'The number of threads to use.'                                                 ,
+        default = (cpus if (cpus := cpu_count()) is not None else 1) // (1 - BLOCKING_COEFFICIENT),
         type    = int
     )
     return parser
@@ -56,8 +56,14 @@ def main() -> None:
     def _download(sound: dict) -> None:
         """Underlying function that ownloads a sound from the server."""
 
+        logger_prefix = 'N/A'
+        filename      = 'N/A'
+
         try:
-            filename = sound.get('id') + '.wav'
+            soundname = sound.get('id')
+            if soundname is None: raise ValueError('Unable to get sound name!')
+
+            filename = soundname + '.wav'
 
             logger_prefix = f'{Fore.BLACK}{Back.WHITE}[Thread | {"%05d" % get_native_id()}]{Style.RESET_ALL}'
             tqdm.write(f'{logger_prefix}{Fore.LIGHTBLUE_EX}{Style.DIM} Downloading \'{filename}\'...{Style.RESET_ALL}')
