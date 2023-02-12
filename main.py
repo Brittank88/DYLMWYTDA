@@ -54,7 +54,7 @@ def main() -> None:
     logger.add(lambda msg: tqdm.write(msg, end = ''))
 
     def _download(sound: dict) -> None:
-        """Underlying function that ownloads a sound from the server."""
+        """Underlying function that downloads a sound from the server."""
 
         logger_prefix = 'N/A'
         filename      = 'N/A'
